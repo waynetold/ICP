@@ -1,0 +1,23 @@
+iResample = 30;
+Positions_Reference = importdata('YourData');
+Positions_Source = importdata('YourData');
+Initial_Matrix = importdata('YourData');
+
+i_Ref = 1:iResample:length(Positions_Reference);
+Positions_Reference_Resample = Positions_Reference(i_Ref,:);
+
+% i_Sor = 1:iResample:length(Positions_Source);
+% Positions_Source_Resample = Positions_Source(i_Sor,:);
+%ICP
+[error,~,transform] = rigidICP(Positions_Reference_Resample,Positions_Source);
+RMatrix = [transform.T' transform.c(1,1:3)'; 0 0 0 1];
+
+FinalMatrix = RMatrix * Initial_Matrix;
+%坐标转换
+% Reallignedsource = transform.b*Positions_Source*transform.T+repmat(transform.c(1,1:3),size(Positions_Source,1),1);
+% 
+% fid = fopen('3Converted4.txt','w+');
+% for i = 1:length(Reallignedsource)
+%     fprintf(fid,'%f %f %f\n',Reallignedsource(i,1:3));
+% end
+% fclose(fid);
